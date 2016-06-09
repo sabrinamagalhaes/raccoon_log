@@ -57,7 +57,7 @@ def _important(message, *args, **kwargs):
     Args:
         message: message to log;
     """
-    logging.log(IMPORTANT_LEVEL, message, args, **kwargs)
+    logging.log(IMPORTANT_LEVEL, message)
 
 
 def set_logger(directory, name, level=25):
