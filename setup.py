@@ -2,7 +2,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 setup(
-    name='log_config',
+    name='raccoon_log',
     version='1.0',
     description="Configure log to follow a pattern for all projects.",
     author="Raccoon",

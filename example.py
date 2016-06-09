@@ -1,3 +1,3 @@
-from log.configure import config_log
+from raccoon_log.config import config_log
 
 config_log('/tmp/logs', 'example', max_files_uncompressed=2, max_level=25, compress=True)
