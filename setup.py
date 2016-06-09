@@ -7,4 +7,5 @@ setup(
     author="Raccoon",
     author_email="ti@raccoon.ag",
     url="https://www.raccoon.ag",
+    packages=find_packages(),
 )
