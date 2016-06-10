@@ -1,11 +1,59 @@
 # Log config
 
-Simple module to configure the logging module following a pattern.
+The main goals of this module are:
 
-### Usage
+1. :pencil: **Standardize names**: create one file per day (append logs of the same day).
+
+  * Follow the pattern **<name_passed_by_arg>_<current_day(%Y_%m_%d)>.log**, example: ```log_2016_06_10.log```
+
+2. :bowtie: **Clean log directory**: compress old log files.
+  
+  * Settable using compress=[True|False]
+  * Max number of not compressed files: **max_files_uncompressed**=N (N default 1)
+
+3. :passport_control: **More control over the log**: create a new log level between WARNING and INFO, the **IMPORTANT** level.
+
+  * How many downloader modules use INFO level to log requests (as GoogleAPI, Request,...), was create a new level to use as info but no so verbose.
+
+
+## Usage
+
+### Include repository
+
+#### virtualenv
+Include at ```requirements.txt```:
 ```python
-from log.configure import config_log
+git+https://github.com/devraccoon/raccoon_log
+```
+#### setup.py
 
-#config_log(directory, log_name, max_files_uncompressed=1, max_level=25, compress=True):
+```python
+setup(
+...
+install_requires=[
+...
+'raccoon-log',
+...
+],
+...
+dependency_links=['https://github.com/devraccoon/raccoon_log/tarball/master#egg=raccoon-log'],
+...
+)
+```
+
+### Run the config
+Run only in the main scipt
+```python
+from raccoon_log.config import config_log
+
 config_log('/tmp/logs', 'example', max_files_uncompressed=2, max_level=25, compress=True)
+```
+
+### Use the log
+In any child script
+```python
+import logging
+
+logging.debug('Hello world!')
+logging.important('This is important!')
 ```
