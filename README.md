@@ -8,12 +8,25 @@ The main goals of this module are:
 
 2. :bowtie: **Clean log directory**: compress old log files.
   
-  * Settable using compress=[True|False]
+  * Settable using **compress**=[True|False]
   * Max number of not compressed files: **max_files_uncompressed**=N (N default 1)
 
 3. :passport_control: **More control over the log**: create a new log level between WARNING and INFO, the **IMPORTANT** level.
 
-  * How many downloader modules use INFO level to log requests (as GoogleAPI, Request,...), was create a new level to use as info but no so verbose.
+  * As many downloader modules use INFO level to log requests (as GoogleAPI, Request,...), was created a new level, **IMPORTANT**, to use as INFO, but no so verbose.
+  * Still can se the level: **max_level**=N (N the max level)
+
+
+## New level table:
+| Level | Numeric value |
+|:-----:|:-------------:|
+|CRITICAL |	50 |
+|ERROR	| 40 |
+|WARNING	| 30 |
+|**IMPORTANT**	| **25** |
+|INFO	| 20 |
+|DEBUG	| 10 |
+|NOTSET	| 0 |
 
 
 ## Usage
