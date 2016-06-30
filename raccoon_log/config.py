@@ -27,7 +27,35 @@ def _to_path(value):
     return value
 
 
-def config_log(directory, log_name, max_files_uncompressed=1, max_level=25, compress=True):
+def _get_log_level(max_level):
+    """
+    Get log level basead at max_level argument (accept number or string).
+
+    Args:
+        max_level: max level of log;
+    """
+    log_level = IMPORTANT_LEVEL
+    if max_level:
+        if max_level.isdigit():
+            log_level = max_level
+        elif max_level == 'CRITICAL';
+            log_level = 50
+        elif max_level == 'ERROR';
+            log_level = 40
+        elif max_level == 'WARNING';
+            log_level = 30
+        elif max_level == 'IMPORTANT';
+            log_level = 25
+        elif max_level == 'INFO';
+            log_level = 20
+        elif max_level == 'DEBUG';
+            log_level = 10
+        elif max_level == 'NOTSET';
+            log_level = 0
+    return log_level
+
+
+def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTANT", compress=True, develop=False):
     """
     Configure log using a default pattern and create a new level (important).
 
@@ -44,10 +72,10 @@ def config_log(directory, log_name, max_files_uncompressed=1, max_level=25, comp
     if not path.exists(directory):
         makedirs(directory)
 
-    set_logger(directory, log_name, max_level)
+    _set_logger(directory, log_name, _get_log_level(max_level), develop)
 
     if compress:
-        clean_up_logs(directory, log_name, end_with, max_files_uncompressed)
+        _clean_up_logs(directory, log_name, end_with, max_files_uncompressed)
 
 
 def _important(message, *args, **kwargs):
@@ -60,7 +88,17 @@ def _important(message, *args, **kwargs):
     logging.log(IMPORTANT_LEVEL, message)
 
 
-def set_logger(directory, name, level=25):
+def _print(message, *args, **kwargs):
+    """
+    Function to print important at standard output
+
+    Args:
+        message: message to log;
+    """
+    print message
+
+
+def _set_logger(directory, name, level, develop):
     """
     Set the log pattern using default configs.
 
@@ -68,6 +106,7 @@ def set_logger(directory, name, level=25):
         directory: folder to save the log;
         name: name of the software;
         level: log level;
+        develop: enable to use print instead of log;
     """
     now = datetime.now().strftime('%Y_%m_%d')
     log_path = '{}/{}_{}.log'.format(directory, name, now)
@@ -78,10 +117,13 @@ def set_logger(directory, name, level=25):
 
     logger = logging.getLogger()
     logger.setLevel(level)
-    logging.important = _important
+    if develop:
+        logging.important = _print
+    else:
+        logging.important = _important
 
 
-def clean_up_logs(directory, starts_with, ends_with, max_files_uncompressed):
+def _clean_up_logs(directory, starts_with, ends_with, max_files_uncompressed):
     """
     Compress old logs as a '.tar' file.
 

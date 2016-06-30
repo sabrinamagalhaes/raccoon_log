@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='raccoon_log',
-    version='1.0',
+    version='1.0.1',
     description="Configure log to follow a pattern for all projects.",
     author="Raccoon",
     author_email="ti@raccoon.ag",
