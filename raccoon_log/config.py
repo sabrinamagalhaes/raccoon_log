@@ -38,19 +38,19 @@ def _get_log_level(max_level):
     if max_level:
         if max_level.isdigit():
             log_level = max_level
-        elif max_level == 'CRITICAL';
+        elif max_level == 'CRITICAL':
             log_level = 50
-        elif max_level == 'ERROR';
+        elif max_level == 'ERROR':
             log_level = 40
-        elif max_level == 'WARNING';
+        elif max_level == 'WARNING':
             log_level = 30
-        elif max_level == 'IMPORTANT';
+        elif max_level == 'IMPORTANT':
             log_level = 25
-        elif max_level == 'INFO';
+        elif max_level == 'INFO':
             log_level = 20
-        elif max_level == 'DEBUG';
+        elif max_level == 'DEBUG':
             log_level = 10
-        elif max_level == 'NOTSET';
+        elif max_level == 'NOTSET':
             log_level = 0
     return log_level
 
