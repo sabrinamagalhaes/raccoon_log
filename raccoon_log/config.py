@@ -6,6 +6,7 @@ from os import makedirs
 from os import listdir
 from os import remove
 from os.path import isfile, join
+from sys import stdout
 
 IMPORTANT_LEVEL = 25
 
@@ -36,8 +37,10 @@ def _get_log_level(max_level):
     """
     log_level = IMPORTANT_LEVEL
     if max_level:
-        if max_level.isdigit():
+        if isinstance(max_level, int):
             log_level = max_level
+        elif max_level.isdigit():
+            log_level = int(max_level)
         elif max_level == 'CRITICAL':
             log_level = 50
         elif max_level == 'ERROR':
@@ -74,7 +77,7 @@ def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTA
 
     _set_logger(directory, log_name, _get_log_level(max_level), develop)
 
-    if compress:
+    if compress and not develop:
         _clean_up_logs(directory, log_name, end_with, max_files_uncompressed)
 
 
@@ -86,16 +89,6 @@ def _important(message, *args, **kwargs):
         message: message to log;
     """
     logging.log(IMPORTANT_LEVEL, message)
-
-
-def _print(message, *args, **kwargs):
-    """
-    Function to print important at standard output
-
-    Args:
-        message: message to log;
-    """
-    print message
 
 
 def _set_logger(directory, name, level, develop):
@@ -112,15 +105,14 @@ def _set_logger(directory, name, level, develop):
     log_path = '{}/{}_{}.log'.format(directory, name, now)
 
     format_pattern = '[%(asctime)s.%(msecs)d] - %(levelname)s: %(message)s'
-    logging.basicConfig(filename=log_path, filemode='a', format=format_pattern,
-                        datefmt='%Y-%m-%d %H:%M:%S')
+    date_format = '%Y-%m-%d %H:%M:%S'
 
-    logger = logging.getLogger()
-    logger.setLevel(level)
     if develop:
-        logging.important = _print
+        logging.basicConfig(format=format_pattern, datefmt=date_format, level=level)
     else:
-        logging.important = _important
+        logging.basicConfig(filename=log_path, filemode='a', format=format_pattern, datefmt=date_format, level=level)
+
+    logging.important = _important
 
 
 def _clean_up_logs(directory, starts_with, ends_with, max_files_uncompressed):
