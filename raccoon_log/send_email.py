@@ -8,6 +8,15 @@ from custom_levels import NOTIFY_LEVEL
 class SendEmail(logging.handlers.BufferingHandler):
 
     def __init__(self, log_name, toaddrs, fromaddr, pwd):
+        """
+        Initializes credentials to send Email
+
+        Args:
+            log_name: first part of the log name;
+            toaddrs: list of emails to send to;
+            fromaddr: email used to send emails;
+            pwd: fromaddr password;
+        """
 
         logging.handlers.BufferingHandler.__init__(self, 9999)
         self.log_name = log_name
@@ -17,6 +26,11 @@ class SendEmail(logging.handlers.BufferingHandler):
         self.setLevel(NOTIFY_LEVEL)
 
     def flush(self):
+        """
+        Function to send log message via email
+
+        """
+
         if len(self.buffer) == 0:
             return
 

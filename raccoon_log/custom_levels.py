@@ -7,7 +7,7 @@ logging.addLevelName(IMPORTANT_LEVEL, "IMPORTANT")
 logging.addLevelName(NOTIFY_LEVEL, "NOTIFY")
 
 
-def _important(message, *args, **kwargs):
+def important(message, *args, **kwargs):
     """
     Function to log in the new level (important)
 
@@ -17,7 +17,7 @@ def _important(message, *args, **kwargs):
     logging.log(IMPORTANT_LEVEL, message)
 
 
-def _notify(message, *args, **kwargs):
+def notify(message, *args, **kwargs):
     """
     Function to log in the new level (notify)
 

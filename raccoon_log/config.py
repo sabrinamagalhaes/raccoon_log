@@ -8,7 +8,7 @@ from os import path
 from os import remove
 from os.path import isfile, join
 
-from custom_levels import IMPORTANT_LEVEL, _important, _notify, NOTIFY_LEVEL
+from custom_levels import IMPORTANT_LEVEL, important, notify, NOTIFY_LEVEL
 from send_email import SendEmail
 from send_sms import SendSMS
 
@@ -72,6 +72,15 @@ def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTA
         max_files_uncompressed: max number of remaining not compressed files;
         max_level: max level of log;
         compress: indicates if compress the logs or no;
+        develop: set output from logging.important to standard ouput (normal print);
+        send_email: boolean to activate or not alert by Email on CRITICAL, ERROR or NOTIFY leve.;
+        to_emails (needed if send_email is True): list of emails to receive alert;
+        from_email (needed if send_email is True): email used to send email alert;
+        pwd (needed if send_email is True): from_email password;
+        send_sms: boolean to receive or not alert by SMS on CRITICAL, ERROR or NOTIFY level;
+        to_phones (needed if send_sms is True): list of phones to receive alert ;
+        auth_id (needed if send_sms is True): auth id from Plivo;
+        auth_token (needed if send_sms is True): auth token from Plivo;
     """
     end_with = '.log'
     directory = _to_path(directory)
@@ -102,6 +111,8 @@ def _set_logger(directory, name, level, develop, email_handler, sms_handler):
         name: name of the software;
         level: log level;
         develop: enable to use print instead of log;
+        email_handler: email handler to add to log
+        sms_handler: sms handler to add to log
     """
     now = datetime.now().strftime('%Y_%m_%d')
     log_path = '{}/{}_{}.log'.format(directory, name, now)
@@ -114,8 +125,8 @@ def _set_logger(directory, name, level, develop, email_handler, sms_handler):
     else:
         logging.basicConfig(filename=log_path, filemode='a', format=format_pattern, datefmt=date_format, level=level)
 
-    logging.important = _important
-    logging.notify = _notify
+    logging.important = important
+    logging.notify = notify
 
     if email_handler:
         logging.root.addHandler(email_handler)

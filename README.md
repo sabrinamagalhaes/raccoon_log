@@ -26,8 +26,8 @@ The main goals of this module are:
 | Level | Numeric value |
 |:-----:|:-------------:|
 |CRITICAL |	50 |
-|**NOTIFY**	| **45** |
 |ERROR	| 40 |
+|**NOTIFY**	| **35** |
 |WARNING	| 30 |
 |**IMPORTANT**	| **25** |
 |INFO	| 20 |
