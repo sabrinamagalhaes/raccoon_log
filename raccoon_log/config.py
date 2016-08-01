@@ -1,16 +1,16 @@
-from datetime import datetime
 import logging
+import logging.handlers
 import tarfile
-from os import path
-from os import makedirs
+from datetime import datetime
 from os import listdir
+from os import makedirs
+from os import path
 from os import remove
 from os.path import isfile, join
-from sys import stdout
 
-IMPORTANT_LEVEL = 25
-
-logging.addLevelName(IMPORTANT_LEVEL, "IMPORTANT")
+from custom_levels import IMPORTANT_LEVEL, _important, _notify, NOTIFY_LEVEL
+from send_email import SendEmail
+from send_sms import SendSMS
 
 
 def _to_path(value):
@@ -30,7 +30,7 @@ def _to_path(value):
 
 def _get_log_level(max_level):
     """
-    Get log level basead at max_level argument (accept number or string).
+    Get log level based at max_level argument (accept number or string).
 
     Args:
         max_level: max level of log;
@@ -45,10 +45,12 @@ def _get_log_level(max_level):
             log_level = 50
         elif max_level == 'ERROR':
             log_level = 40
+        elif max_level == 'NOTIFY':
+            log_level = NOTIFY_LEVEL
         elif max_level == 'WARNING':
             log_level = 30
         elif max_level == 'IMPORTANT':
-            log_level = 25
+            log_level = IMPORTANT_LEVEL
         elif max_level == 'INFO':
             log_level = 20
         elif max_level == 'DEBUG':
@@ -58,7 +60,9 @@ def _get_log_level(max_level):
     return log_level
 
 
-def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTANT", compress=True, develop=False):
+def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTANT", compress=True, develop=False,
+               send_email=False, to_emails=None, from_email=None, pwd=None,
+               send_sms=False, to_phones=None, auth_id=None, auth_token=None):
     """
     Configure log using a default pattern and create a new level (important).
 
@@ -75,23 +79,21 @@ def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTA
     if not path.exists(directory):
         makedirs(directory)
 
-    _set_logger(directory, log_name, _get_log_level(max_level), develop)
+    email_handler = None
+    sms_handler = None
+    if send_email:
+        email_handler = SendEmail(log_name, to_emails, from_email, pwd)
+
+    if send_sms:
+        sms_handler = SendSMS(log_name, to_phones, auth_id, auth_token)
+
+    _set_logger(directory, log_name, _get_log_level(max_level), develop, email_handler, sms_handler)
 
     if compress and not develop:
         _clean_up_logs(directory, log_name, end_with, max_files_uncompressed)
 
 
-def _important(message, *args, **kwargs):
-    """
-    Function to log in the new level (important)
-
-    Args:
-        message: message to log;
-    """
-    logging.log(IMPORTANT_LEVEL, message)
-
-
-def _set_logger(directory, name, level, develop):
+def _set_logger(directory, name, level, develop, email_handler, sms_handler):
     """
     Set the log pattern using default configs.
 
@@ -113,6 +115,12 @@ def _set_logger(directory, name, level, develop):
         logging.basicConfig(filename=log_path, filemode='a', format=format_pattern, datefmt=date_format, level=level)
 
     logging.important = _important
+    logging.notify = _notify
+
+    if email_handler:
+        logging.root.addHandler(email_handler)
+    if sms_handler:
+        logging.root.addHandler(sms_handler)
 
 
 def _clean_up_logs(directory, starts_with, ends_with, max_files_uncompressed):
