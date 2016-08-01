@@ -10,7 +10,7 @@ setup(
     url="https://www.raccoon.ag",
     packages=find_packages(),
     install_requires=[
-        'git+https://github.com/devraccoon/raccoon_notifier',
+        'raccoon_notifier',
     ],
     dependency_links=['https://github.com/devraccoon/raccoon_notifier/tarball/master#egg=raccoon_notifier'],
     )
