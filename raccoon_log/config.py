@@ -78,7 +78,7 @@ def config_log(directory, log_name, max_files_uncompressed=1, max_level="IMPORTA
         from_email (needed if send_email is True): email used to send email alert;
         pwd (needed if send_email is True): from_email password;
         send_sms: boolean to receive or not alert by SMS on CRITICAL, ERROR or NOTIFY level;
-        to_phones (needed if send_sms is True): list of phones to receive alert ;
+        to_phones (needed if send_sms is True): list of phones to receive alert;
         auth_id (needed if send_sms is True): auth id from Plivo;
         auth_token (needed if send_sms is True): auth token from Plivo;
     """
