@@ -40,6 +40,11 @@ The main goals of this module are:
 ### Include repository
 
 #### virtualenv
+
+Install raccoon_notifier:
+
+`pip install git+https://github.com/devraccoon/raccoon_notifier`
+
 Include at ```requirements.txt```:
 ```python
 git+https://github.com/devraccoon/raccoon_log
