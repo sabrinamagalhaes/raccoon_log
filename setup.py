@@ -10,6 +10,6 @@ setup(
     url="https://www.raccoon.ag",
     packages=find_packages(),
     install_requires=[
-        '[-e] git+git://github.com/sabrinamagalhaes/raccoon_notifier/#egg=raccoon_notifier',
+        'git+git://github.com/sabrinamagalhaes/raccoon_notifier/#egg=raccoon_notifier',
     ],
     )
